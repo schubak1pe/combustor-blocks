@@ -1,0 +1,177 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Combustor Blocks</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<header id="topbar">
+  <div class="brand">
+    <div class="logo">CB</div>
+    <div class="brandtext">
+      <h1>Combustor Blocks</h1>
+      <p id="projectName">Mi programa</p>
+    </div>
+  </div>
+
+  <div class="actions">
+    <button id="btnConnect" class="btn ghost" title="Leer las partes del motor abierto">Conectar</button>
+    <button id="btnRun" class="btn run">▶ Ejecutar</button>
+    <button id="btnStop" class="btn stop">■ Detener</button>
+    <span class="divider"></span>
+    <button id="btnSave" class="btn ghost">Guardar</button>
+    <button id="btnLoad" class="btn ghost">Abrir</button>
+    <button id="btnNew" class="btn ghost">Nuevo</button>
+    <button id="btnUndo" class="btn icon" title="Deshacer (Ctrl+Z)">↶</button>
+    <button id="btnRedo" class="btn icon" title="Rehacer (Ctrl+Y)">↷</button>
+    <button id="btnCode" class="btn ghost" title="Mostrar u ocultar el panel lateral">Código</button>
+    <button id="btnHelp" class="btn ghost">Ayuda</button>
+    <select id="langSelect" class="lang-select" title="Language">
+      <option value="auto">Auto</option>
+      <option value="es">ES</option>
+      <option value="en">EN</option>
+    </select>
+  </div>
+
+  <div class="chip" id="chip">Sin conexión</div>
+</header>
+
+<main id="layout">
+  <div id="blocklyDiv"></div>
+
+  <aside id="side">
+    <div class="tabs">
+      <button class="tab active" data-tab="code">Código</button>
+      <button class="tab" data-tab="log">Salida</button>
+      <button class="tab" data-tab="parts">Partes</button>
+      <button class="tab" data-tab="ai">IA</button>
+    </div>
+
+    <section id="tab-code" class="tabpane active">
+      <div class="panehead">
+        <span id="codeStatus">Sin generar</span>
+        <button id="btnCopy" class="mini">Copiar</button>
+      </div>
+      <div id="code" class="code"></div>
+    </section>
+
+    <section id="tab-log" class="tabpane">
+      <div class="panehead">
+        <span>Salida del juego</span>
+        <button id="btnClearLog" class="mini">Limpiar</button>
+      </div>
+      <div id="log" class="log"><div class="empty">Aquí aparecen print() y los errores del script.</div></div>
+    </section>
+
+    <section id="tab-parts" class="tabpane">
+      <div class="panehead">
+        <span id="partsTitle">Partes del motor</span>
+        <button id="btnRefreshParts" class="mini">Actualizar</button>
+      </div>
+      <div id="parts" class="parts"><div class="empty">Conecta con un motor en Sandbox para ver sus partes.</div></div>
+    </section>
+
+    <section id="tab-ai" class="tabpane">
+      <div class="panehead">
+        <span>Asistente IA</span>
+        <button id="btnAiSettings" class="mini">Ajustes</button>
+      </div>
+
+      <div id="aiSettings" class="ai-settings hidden">
+        <label><span data-i18n="ai.provider">Proveedor</span>
+          <select id="aiProvider">
+            <option value="builtin">Integrado (sin conexión)</option>
+            <option value="ollama">Ollama (local)</option>
+            <option value="openai">OpenAI-compatible</option>
+          </select>
+        </label>
+        <label><span data-i18n="ai.url">URL base</span><input id="aiUrl" type="text" value="http://127.0.0.1:11434"></label>
+        <label><span data-i18n="ai.model">Modelo</span><input id="aiModel" type="text" value="llama3.1"></label>
+        <label><span data-i18n="ai.key">API key (opcional)</span><input id="aiKey" type="password" placeholder="solo para OpenAI-compatible"></label>
+        <div class="ai-save">
+          <button id="btnAiSave" class="mini">Guardar</button>
+          <span id="aiStatus">Sin conexión externa</span>
+        </div>
+        <div class="ai-note" id="aiNote">Ollama: URL base sin /api. OpenAI-compatible: URL base; se añade /v1/chat/completions. La petición sale por el mod local, sin CORS.</div>
+      </div>
+
+      <div id="aiChat" class="ai-chat"></div>
+
+      <div class="ai-quick">
+        <button data-ai="temperatura">Temperatura</button>
+        <button data-ai="valvula">Válvula</button>
+        <button data-ai="contador">Contador</button>
+        <button data-ai="aleatorio">Aleatorio</button>
+        <button data-ai="error">Explicar error</button>
+      </div>
+
+      <div class="ai-input">
+        <textarea id="aiPrompt" placeholder="Pide un programa… ej. controla la temperatura con un sensor"></textarea>
+        <button id="btnAiSend" class="btn run">Preguntar</button>
+      </div>
+    </section>
+  </aside>
+</main>
+
+<footer id="statusbar">
+  <span id="statusLeft">Listo</span>
+  <button id="btnResume" class="mini hidden">Reanudar simulación</button>
+  <span id="statusRight"></span>
+</footer>
+
+<div id="overlay" class="overlay hidden">
+  <div class="card">
+    <h2 id="ovTitle">Conectando con Combustor</h2>
+    <p id="ovText">Abriendo el motor…</p>
+    <div class="ovActions">
+      <button id="ovConnect" class="btn run">Conectar</button>
+      <button id="ovClose" class="btn ghost">Seguir sin conexión</button>
+    </div>
+  </div>
+</div>
+
+<div id="help" class="overlay hidden">
+  <div class="card wide">
+    <h2>Cómo usar Combustor Blocks</h2>
+    <div class="helpbody">
+      <h3>1. Conectar</h3>
+      <p>Entra en <b>Sandbox</b> en Combustor y pulsa <b>Conectar</b> aquí (o F7 dentro del juego para abrir esta página).
+         El editor lee las partes reales del motor y sus operaciones.</p>
+      <h3>2. Programar</h3>
+      <p>Arrastra bloques desde la paleta. Los bloques de evento son el punto de entrada.
+         Mete bloques dentro de <b>Si</b>, <b>Repetir</b> y <b>Mientras</b> soltándolos en su hueco.</p>
+      <h3>3. Ejecutar</h3>
+      <p><b>Ejecutar</b> traduce los bloques al lenguaje real de Combustor (GS), lo valida con el compilador
+         del juego y lo lanza en el motor abierto. <b>Detener</b> lo para.</p>
+      <h3>4. Datos reales</h3>
+      <p>Los bloques morados solo ofrecen operaciones que el juego expone de verdad:
+         válvulas (abrir, cerrar, presión, temperatura), inyectores (caudal, gas), sensores
+         (temperatura, presión, densidad, gas, moles), ventiladores, filtros, compuertas, pistones,
+         nave y tienda. Los sensores se colocan con <b>Place sensor</b> en el editor de código del juego.</p>
+      <h3>5. Guardar</h3>
+      <p><b>Guardar</b> escribe el proyecto en la carpeta del mod. También se guarda una copia automática
+         en el navegador y puedes exportar/importar el JSON.</p>
+      <h3>Límites conocidos</h3>
+      <ul>
+        <li>Al detener el programa solo se ejecuta si usas el bloque <b>Detener programa</b>.</li>
+        <li>No existe un evento real de fin de simulación.</li>
+        <li>Los eventos se comprueban una vez por tick (no son asíncronos).</li>
+        <li>El programa solo puede tocar lo que podrías tocar a mano en ese momento.</li>
+      </ul>
+    </div>
+    <div class="ovActions">
+      <button id="helpClose" class="btn run">Entendido</button>
+    </div>
+  </div>
+</div>
+
+<div id="toast" class="toast hidden"></div>
+
+<script src="blockly/blockly.min.js"></script>
+<script src="i18n.js"></script>
+<script src="app.js"></script>
+</body>
+</html>

@@ -1,0 +1,63 @@
+Combustor Blocks 0.1.0
+======================
+
+Editor de programación visual estilo Scratch para Combustor.
+Los bloques se traducen al lenguaje real del juego (GS) y se ejecutan con su
+propia máquina virtual.
+
+REQUISITOS
+----------
+- Combustor (Steam). Probado en la build 26701522, Unity 6000.3.2f1.
+- MelonLoader 0.7.3 para Combustor.
+  https://github.com/LavaGang/MelonLoader/releases/tag/v0.7.3
+- Windows x64 y un navegador moderno.
+
+INSTALACIÓN
+-----------
+1. Instala MelonLoader 0.7.3 en Combustor.
+2. Cierra Combustor.
+3. Extrae este ZIP en la carpeta que contiene EngineSimulator.exe,
+   fusionando las carpetas Mods y UserData.
+4. Comprueba que existe:
+      Mods\CombustorBlocks.dll
+      UserData\CombustorBlocks\web\index.html
+5. Arranca Combustor y entra en Sandbox.
+
+ABRIR EL EDITOR
+---------------
+- Doble clic en UserData\CombustorBlocks\Abrir editor.url, o
+- abre http://127.0.0.1:8765/ en el navegador, o
+- pulsa F7 dentro del juego.
+
+En el editor, pulsa "Conectar" para leer las partes del motor abierto.
+Si colocas o quitas piezas, pulsa "Actualizar" en la pestaña Partes.
+
+La pestaña "IA" incluye un asistente integrado que funciona sin conexión
+(plantillas y explicación de errores). Si quieres usar un modelo, abre
+"IA > Ajustes" y configura Ollama o un endpoint OpenAI-compatible.
+
+En la barra superior hay un selector Auto / ES / EN. Auto usa el idioma del
+navegador; si no es español o inglés, usa el del juego.
+
+USO
+---
+- Arrastra bloques desde la paleta al lienzo.
+- Los bloques de evento (amarillo) son el punto de entrada.
+- Suelta bloques dentro de Si / Repetir / Mientras para anidarlos.
+- "Ejecutar" compila a GS, lo valida con el compilador del juego y lo lanza.
+- "Detener" para el script.
+- El panel Código muestra el GS generado y los errores con su línea.
+- Guardar/Abrir usan UserData\CombustorBlocks\project.json.
+
+NOTAS
+-----
+- Los sensores se colocan con "Place sensor" en el editor de código del juego
+  (botón Code [beta] del Sandbox). Después pulsa Conectar/Actualizar.
+- El evento "Al detener" solo se ejecuta desde el bloque "Detener programa".
+- No existe un evento real de fin de simulación en GS.
+- El servidor escucha solo en 127.0.0.1; no lo expongas a la red.
+- Para desinstalar: cierra el juego y borra Mods\CombustorBlocks.dll y
+  UserData\CombustorBlocks.
+
+Registro del mod: MelonLoader\Logs\
+Proyectos: UserData\CombustorBlocks\

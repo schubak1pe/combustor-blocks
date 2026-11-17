@@ -1,0 +1,173 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Combustor Blocks — Discord post</title>
+<style>
+  :root {
+    --bg: #0f1116;
+    --panel: #1a1f29;
+    --panel2: #222836;
+    --stroke: #333b4b;
+    --text: #e9edf5;
+    --muted: #8d96a8;
+    --accent: #5b8cff;
+    --green: #37d67a;
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    min-height: 100vh;
+    background: var(--bg);
+    color: var(--text);
+    font-family: "Segoe UI", Tahoma, Arial, sans-serif;
+    display: grid;
+    place-items: center;
+    padding: 24px;
+  }
+  .card {
+    width: min(820px, 96vw);
+    background: var(--panel);
+    border: 1px solid var(--stroke);
+    border-radius: 14px;
+    padding: 22px;
+    box-shadow: 0 24px 70px rgba(0,0,0,.5);
+  }
+  h1 { margin: 0 0 4px; font-size: 20px; }
+  p.sub { margin: 0 0 16px; color: var(--muted); font-size: 13px; }
+  textarea {
+    width: 100%;
+    height: 58vh;
+    min-height: 320px;
+    resize: vertical;
+    background: #0d1016;
+    color: #d9e1f0;
+    border: 1px solid var(--stroke);
+    border-radius: 8px;
+    padding: 14px;
+    font: 12.5px/1.55 "Cascadia Mono", Consolas, "Courier New", monospace;
+    white-space: pre-wrap;
+  }
+  .row { display: flex; gap: 10px; align-items: center; margin-top: 14px; flex-wrap: wrap; }
+  button {
+    height: 40px;
+    padding: 0 18px;
+    border: 0;
+    border-radius: 8px;
+    font: inherit;
+    font-weight: 700;
+    font-size: 13px;
+    cursor: pointer;
+  }
+  #copy {
+    background: var(--accent);
+    color: #fff;
+  }
+  #copy:hover { filter: brightness(1.1); }
+  #select {
+    background: var(--panel2);
+    color: var(--text);
+    border: 1px solid var(--stroke);
+  }
+  #status {
+    font-size: 12.5px;
+    color: var(--green);
+    min-height: 20px;
+  }
+  .hint { color: var(--muted); font-size: 11.5px; margin-left: auto; }
+</style>
+</head>
+<body>
+<div class="card">
+  <h1>Combustor Blocks — Discord post</h1>
+  <p class="sub">Click the button to copy the full message, then paste it into Discord.</p>
+
+  <textarea id="msg" readonly spellcheck="false"></textarea>
+
+  <div class="row">
+    <button id="copy">📋 Copy for Discord</button>
+    <button id="select">Select all</button>
+    <span id="status"></span>
+    <span class="hint">Discord keeps the **bold**, `code` and code blocks.</span>
+  </div>
+</div>
+
+<script id="source" type="text/plain">
+**Combustor Blocks — Visual Scripting for Combustor**
+Drag-and-drop blocks that compile to Combustor's real script language and run live in-game. No code required.
+
+**✅ Requirements**
+• Combustor on Steam
+• MelonLoader 0.7.3 → https://github.com/LavaGang/MelonLoader/releases/tag/v0.7.3
+• `CombustorBlocks-v0.1.0.zip`
+
+**📦 Install**
+1. Close Combustor.
+2. Steam → right-click **Combustor** → **Manage** → **Browse local files**.
+3. Extract the ZIP there and merge `Mods` / `UserData`.
+4. Launch the game and enter **Sandbox**.
+
+**🖥️ Open the editor**
+• Double-click `UserData\CombustorBlocks\Abrir editor.url`
+• Or open `http://127.0.0.1:8765/`
+Click **Conectar**.
+
+**🧱 First program**
+1. Drag **Al iniciar el programa** + **Crear variable** `temperatura_objetivo = 800`.
+2. Drag **En cada actualización** + **Si**:
+   `sensor_1.temperature > temperatura_objetivo`
+   Then **Mostrar** `"Temperatura demasiado alta"`, else `"Temperatura dentro del límite"`.
+3. Place a sensor in-game (**Code [beta] → Place sensor**), click **Conectar/Actualizar**.
+4. Click **Ejecutar**.
+
+**🤖 AI helper**
+Open the **IA** tab for built-in templates and error explanations, or connect Ollama/OpenAI-compatible in **Ajustes**.
+
+**💾 Save/Load**
+**Guardar** → `UserData\CombustorBlocks\project.json` · **Abrir** loads it · **Nuevo** resets.
+
+**🛠️ Troubleshooting**
+• No connection → game open in Sandbox, click **Conectar**.
+• Editor won't open → use `Abrir editor.url`.
+• Port changed → check `MelonLoader\Logs\`.
+• Game paused → **Reanudar simulación** or **Ejecutar**.
+
+**🧩 Other mods**
+Yes. MelonLoader loads every DLL in `Mods\`; each mod uses its own `UserData` folder.
+
+**🗑️ Uninstall**
+Delete `Mods\CombustorBlocks.dll` and `UserData\CombustorBlocks\`. MelonLoader can stay.
+</script>
+
+<script>
+  const source = document.getElementById('source').textContent.trim();
+  const msg = document.getElementById('msg');
+  msg.value = source;
+  document.getElementById('status').textContent = source.length + ' characters';
+
+  async function copyText() {
+    const status = document.getElementById('status');
+    try {
+      await navigator.clipboard.writeText(source);
+      status.textContent = '✅ Copied to clipboard — paste it in Discord';
+    } catch (e) {
+      msg.focus();
+      msg.select();
+      try {
+        document.execCommand('copy');
+        status.textContent = '✅ Copied (fallback) — paste it in Discord';
+      } catch (e2) {
+        status.textContent = '❌ Copy failed — use Select all and Ctrl+C';
+      }
+    }
+  }
+
+  document.getElementById('copy').addEventListener('click', copyText);
+  document.getElementById('select').addEventListener('click', () => {
+    msg.focus();
+    msg.select();
+  });
+</script>
+</body>
+</html>

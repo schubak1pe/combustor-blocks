@@ -1,0 +1,22 @@
+Third-party notices
+===================
+
+Blockly 13.4.0
+--------------
+Copyright 2012 Google LLC
+Licensed under the Apache License, Version 2.0.
+The full license text is included at:
+  UserData/CombustorBlocks/web/blockly/LICENSE
+Source: https://github.com/google/blockly
+
+MelonLoader
+-----------
+Copyright LavaGang and contributors.
+MelonLoader is a separate prerequisite, not bundled with this mod.
+See https://github.com/LavaGang/MelonLoader for its license.
+
+Combustor
+---------
+Combustor and its GS scripting language are property of their respective
+authors. This mod is unofficial and is not affiliated with the game's
+developers. Do not report mod-related issues to them.

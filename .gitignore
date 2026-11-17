@@ -1,0 +1,10 @@
+bin/
+obj/
+dist/
+*.zip
+*.user
+.vs/
+.idea/
+Logs/
+project.json
+autosave.json
