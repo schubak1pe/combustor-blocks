@@ -1,9 +1,18 @@
-Combustor Blocks 0.1.0
+Combustor Blocks 0.2.0
 ======================
 
 Editor de programación visual estilo Scratch para Combustor.
 Los bloques se traducen al lenguaje real del juego (GS) y se ejecutan con su
 propia máquina virtual.
+
+NOVEDADES 0.2.0
+---------------
+- Botón "Puertas lógicas" en la barra inferior: AND, OR, NOT, XOR, NAND, NOR
+  y XNOR. Al pulsar una puerta se inserta en el lienzo.
+- Categoría "Puertas lógicas" en la paleta, con las mismas puertas.
+- Las entradas son condiciones reales del motor (sensores, válvulas, caudal);
+  las salidas pueden ser válvulas, inyectores, encendedores, etc.
+- Las puertas se compilan a expresiones GS normales; no añaden un runtime nuevo.
 
 REQUISITOS
 ----------

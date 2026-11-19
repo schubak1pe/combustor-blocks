@@ -417,7 +417,7 @@ namespace CombustorBlocks
             switch (req.Path)
             {
                 case "/api/health":
-                    return Json(new { ok = true, app = "Combustor Blocks", version = "0.1.0" });
+                    return Json(new { ok = true, app = "Combustor Blocks", version = "0.2.0" });
 
                 case "/api/state":
                     return Text(ApiState.State, "application/json; charset=utf-8");

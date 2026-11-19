@@ -118,6 +118,7 @@
 
 <footer id="statusbar">
   <span id="statusLeft">Listo</span>
+  <button id="btnGates" class="mini" data-i18n="btn.gates">Puertas lógicas</button>
   <button id="btnResume" class="mini hidden">Reanudar simulación</button>
   <span id="statusRight"></span>
 </footer>
@@ -164,6 +165,25 @@
     </div>
     <div class="ovActions">
       <button id="helpClose" class="btn run">Entendido</button>
+    </div>
+  </div>
+</div>
+
+<div id="gates" class="overlay hidden">
+  <div class="card gates-card">
+    <h2 data-i18n="gates.title">Puertas lógicas</h2>
+    <p data-i18n="gates.hint">Haz clic en una puerta para insertarla en el lienzo.</p>
+    <div class="gate-grid">
+      <button class="gate-btn" data-gate="and"><b>AND</b><span data-i18n="gate.and.desc">Ambas condiciones</span></button>
+      <button class="gate-btn" data-gate="or"><b>OR</b><span data-i18n="gate.or.desc">Cualquiera de las dos</span></button>
+      <button class="gate-btn" data-gate="not"><b>NOT</b><span data-i18n="gate.not.desc">Invierte la condición</span></button>
+      <button class="gate-btn" data-gate="xor"><b>XOR</b><span data-i18n="gate.xor.desc">Solo una de las dos</span></button>
+      <button class="gate-btn" data-gate="nand"><b>NAND</b><span data-i18n="gate.nand.desc">No ambas</span></button>
+      <button class="gate-btn" data-gate="nor"><b>NOR</b><span data-i18n="gate.nor.desc">Ninguna de las dos</span></button>
+      <button class="gate-btn" data-gate="xnor"><b>XNOR</b><span data-i18n="gate.xnor.desc">Ambas iguales</span></button>
+    </div>
+    <div class="ovActions">
+      <button id="gatesClose" class="btn ghost" data-i18n="btn.close">Cerrar</button>
     </div>
   </div>
 </div>

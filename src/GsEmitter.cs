@@ -509,6 +509,10 @@ namespace CombustorBlocks
                 case "logic_and": return "(" + A(e, "a") + " and " + A(e, "b") + ")";
                 case "logic_or": return "(" + A(e, "a") + " or " + A(e, "b") + ")";
                 case "logic_not": return "(not " + A(e, "a") + ")";
+        case "logic_xor": return "(not (" + A(e, "a") + " == " + A(e, "b") + "))";
+        case "logic_nand": return "(not (" + A(e, "a") + " and " + A(e, "b") + "))";
+        case "logic_nor": return "(not (" + A(e, "a") + " or " + A(e, "b") + "))";
+        case "logic_xnor": return "(" + A(e, "a") + " == " + A(e, "b") + ")";
 
                 case "cmp_eq": return "(" + A(e, "a") + " == " + A(e, "b") + ")";
                 case "cmp_ne": return "(not (" + A(e, "a") + " == " + A(e, "b") + "))";

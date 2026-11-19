@@ -2,7 +2,7 @@ using System;
 using MelonLoader;
 using UnityEngine;
 
-[assembly: MelonInfo(typeof(CombustorBlocks.BlocksMod), "Combustor Blocks", "0.1.0", "Combustor Blocks")]
+[assembly: MelonInfo(typeof(CombustorBlocks.BlocksMod), "Combustor Blocks", "0.2.0", "Combustor Blocks")]
 [assembly: MelonGame("DefaultCompany", "EngineSimulator")]
 
 namespace CombustorBlocks

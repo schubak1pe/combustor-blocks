@@ -213,6 +213,20 @@ function hatBlock(type, text, tooltip, colour) {
   };
 }
 
+function gateBlock(type, label, tooltip) {
+  Blockly.Blocks[type] = {
+    init: function () {
+      this.appendValueInput('A').setCheck('Boolean');
+      this.appendDummyInput().appendField(label);
+      this.appendValueInput('B').setCheck('Boolean');
+      this.setInputsInline(true);
+      this.setOutput(true, 'Boolean');
+      this.setColour(C.logic);
+      this.setTooltip(tooltip || '');
+    }
+  };
+}
+
 function defineBlocks() {
   /* ---------------------------- events ---------------------------- */
   hatBlock('cb_when_start', t('block.when_start'),
@@ -267,6 +281,12 @@ function defineBlocks() {
       this.setTooltip(t('tip.stop'));
     }
   };
+
+  /* --------------------------- logic gates ------------------------ */
+  gateBlock('cb_logic_xor', 'XOR', t('tip.xor'));
+  gateBlock('cb_logic_nand', 'NAND', t('tip.nand'));
+  gateBlock('cb_logic_nor', 'NOR', t('tip.nor'));
+  gateBlock('cb_logic_xnor', 'XNOR', t('tip.xnor'));
 
   /* --------------------------- combustor -------------------------- */
   Blockly.Blocks['cb_print'] = {
@@ -538,7 +558,11 @@ function buildToolbox() {
         { kind: 'block', type: 'logic_negate' },
         { kind: 'block', type: 'logic_boolean', fields: { BOOL: 'TRUE' } },
         { kind: 'block', type: 'logic_boolean', fields: { BOOL: 'FALSE' } },
-        { kind: 'block', type: 'logic_ternary' }
+        { kind: 'block', type: 'logic_ternary' },
+        { kind: 'block', type: 'cb_logic_xor' },
+        { kind: 'block', type: 'cb_logic_nand' },
+        { kind: 'block', type: 'cb_logic_nor' },
+        { kind: 'block', type: 'cb_logic_xnor' }
       ]
     },
     {
@@ -678,6 +702,26 @@ function generate(root) {
         return '(' + a + (b.getFieldValue('OP') === 'AND' ? ' and ' : ' or ') + c + ')';
       }
       case 'logic_negate': return '(not ' + value(b.getInputTargetBlock('BOOL')) + ')';
+      case 'cb_logic_xor': {
+        const a = value(b.getInputTargetBlock('A'));
+        const c = value(b.getInputTargetBlock('B'));
+        return '(not (' + a + ' == ' + c + '))';
+      }
+      case 'cb_logic_nand': {
+        const a = value(b.getInputTargetBlock('A'));
+        const c = value(b.getInputTargetBlock('B'));
+        return '(not (' + a + ' and ' + c + '))';
+      }
+      case 'cb_logic_nor': {
+        const a = value(b.getInputTargetBlock('A'));
+        const c = value(b.getInputTargetBlock('B'));
+        return '(not (' + a + ' or ' + c + '))';
+      }
+      case 'cb_logic_xnor': {
+        const a = value(b.getInputTargetBlock('A'));
+        const c = value(b.getInputTargetBlock('B'));
+        return '(' + a + ' == ' + c + ')';
+      }
       case 'logic_ternary': {
         used.ternary = true;
         return '__cb_ternary(' + value(b.getInputTargetBlock('IF')) + ', ' +
@@ -2208,6 +2252,46 @@ async function sendAi(prompt) {
 /* UI wiring                                                          */
 /* ------------------------------------------------------------------ */
 
+let gateInsertOffset = 0;
+
+function openGates() {
+  const el = $('gates');
+  if (el) el.classList.remove('hidden');
+}
+
+function closeGates() {
+  const el = $('gates');
+  if (el) el.classList.add('hidden');
+}
+
+function insertGate(kind) {
+  if (!workspace) return;
+  const map = {
+    and: ['logic_operation', 'AND'],
+    or: ['logic_operation', 'OR'],
+    not: ['logic_negate', null],
+    xor: ['cb_logic_xor', null],
+    nand: ['cb_logic_nand', null],
+    nor: ['cb_logic_nor', null],
+    xnor: ['cb_logic_xnor', null]
+  };
+  const entry = map[kind];
+  if (!entry) return;
+  const block = workspace.newBlock(entry[0]);
+  if (entry[1]) block.setFieldValue(entry[1], 'OP');
+  block.initSvg();
+  block.render();
+  const metrics = workspace.getMetrics();
+  const x = metrics.viewLeft + metrics.viewWidth * 0.5 - 70 + (gateInsertOffset % 3) * 30;
+  const y = metrics.viewTop + metrics.viewHeight * 0.5 - 30 + Math.floor(gateInsertOffset / 3) * 42;
+  block.moveBy(x, y);
+  block.select();
+  gateInsertOffset++;
+  closeGates();
+  workspace.centerOnBlock(block.id);
+  generateNow();
+}
+
 function wireUi() {
   $('btnConnect').addEventListener('click', () => connect(false));
   $('btnRun').addEventListener('click', runProgram);
@@ -2229,6 +2313,14 @@ function wireUi() {
   });
   $('btnHelp').addEventListener('click', () => $('help').classList.remove('hidden'));
   $('helpClose').addEventListener('click', () => $('help').classList.add('hidden'));
+  $('btnGates').addEventListener('click', openGates);
+  $('gatesClose').addEventListener('click', closeGates);
+  $('gates').addEventListener('click', (e) => {
+    if (e.target === $('gates')) closeGates();
+  });
+  document.querySelectorAll('[data-gate]').forEach((btn) => {
+    btn.addEventListener('click', () => insertGate(btn.getAttribute('data-gate')));
+  });
   $('ovConnect').addEventListener('click', () => connect(false));
   $('ovClose').addEventListener('click', hideOverlay);
   $('btnCopy').addEventListener('click', async () => {
@@ -2257,6 +2349,11 @@ function wireUi() {
   }
 
   document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape' && !$('gates').classList.contains('hidden')) {
+      e.preventDefault();
+      closeGates();
+      return;
+    }
     if (e.ctrlKey && e.key === 'Enter') { e.preventDefault(); runProgram(); }
     if (e.key === 'F7') { e.preventDefault(); connect(false); }
   });

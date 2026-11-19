@@ -63,7 +63,7 @@ namespace CombustorBlocks
         {
             new CategoryInfo { Id = "events",    Name = "Eventos",       Color = "#E6B23A", Description = "Cuándo empieza el programa y cuándo se ejecuta cada bloque." },
             new CategoryInfo { Id = "control",   Name = "Control",       Color = "#F08A3C", Description = "Condiciones, bucles, esperas y paradas." },
-            new CategoryInfo { Id = "logic",     Name = "Lógica",        Color = "#4FB96A", Description = "Combinar condiciones con Y, O y NO." },
+            new CategoryInfo { Id = "logic",     Name = "Puertas lógicas", Color = "#4FB96A", Description = "Combinar condiciones con Y, O, NO, XOR, NAND, NOR y XNOR." },
             new CategoryInfo { Id = "compare",   Name = "Comparación",   Color = "#2FA8C7", Description = "Comparar números y texto." },
             new CategoryInfo { Id = "math",      Name = "Matemáticas",   Color = "#6BC24A", Description = "Cuentas y números aleatorios." },
             new CategoryInfo { Id = "variables", Name = "Variables",     Color = "#E2683C", Description = "Guardar valores con un nombre." },
@@ -204,6 +204,22 @@ namespace CombustorBlocks
 
             s = Spec("logic_not", "logic", "no {a}", BlockShape.Boolean, slots: new[] { "a" });
             Slot(s, "a", SlotKind.Bool);
+
+            s = Spec("logic_xor", "logic", "{a} XOR {b}", BlockShape.Boolean, slots: new[] { "a", "b" },
+                tip: "Verdadero solo cuando una de las dos condiciones es verdadera y la otra no.");
+            Slot(s, "a", SlotKind.Bool); Slot(s, "b", SlotKind.Bool);
+
+            s = Spec("logic_nand", "logic", "{a} NAND {b}", BlockShape.Boolean, slots: new[] { "a", "b" },
+                tip: "Lo contrario de AND: falso solo cuando ambas condiciones son verdaderas.");
+            Slot(s, "a", SlotKind.Bool); Slot(s, "b", SlotKind.Bool);
+
+            s = Spec("logic_nor", "logic", "{a} NOR {b}", BlockShape.Boolean, slots: new[] { "a", "b" },
+                tip: "Lo contrario de OR: verdadero solo cuando ambas condiciones son falsas.");
+            Slot(s, "a", SlotKind.Bool); Slot(s, "b", SlotKind.Bool);
+
+            s = Spec("logic_xnor", "logic", "{a} XNOR {b}", BlockShape.Boolean, slots: new[] { "a", "b" },
+                tip: "Verdadero cuando ambas condiciones son iguales.");
+            Slot(s, "a", SlotKind.Bool); Slot(s, "b", SlotKind.Bool);
 
             Spec("bool_true", "logic", "verdadero", BlockShape.Boolean);
             Spec("bool_false", "logic", "falso", BlockShape.Boolean);
