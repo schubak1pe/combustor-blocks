@@ -1,5 +1,7 @@
 # Combustor Blocks
 
+**Descarga:** [CombustorBlocks-v0.2.0.zip](https://github.com/schubak1pe/combustor-blocks/releases/latest)
+
 **Programación visual estilo Scratch para Combustor.**  
 Los bloques se traducen al lenguaje real del juego (GS), se validan con su
 compilador y se ejecutan con su propia máquina virtual.
