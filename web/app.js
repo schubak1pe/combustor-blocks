@@ -1934,6 +1934,7 @@ function applyStaticTranslations() {
   const quick = {
     temperatura: 'ai.quickTemp',
     valvula: 'ai.quickValve',
+    puertas: 'ai.quickGates',
     contador: 'ai.quickCounter',
     aleatorio: 'ai.quickRandom',
     error: 'ai.quickError'
@@ -2060,6 +2061,13 @@ function aiSystemPrompt() {
   return 'You are an expert programmer for Combustor, a 2D engine and chemistry sandbox.\n' +
     'You write programs in the real GS language of the game. Return ONLY raw GS code, with no explanations and no markdown fences.\n' +
     'GS syntax: 4-space indentation, # comments, if/elif/else, while, for i in range(n), def/return, break, continue, pass, lists, indexing, and/or/not, == != < > <= >=, + - * / %, print(), wait(seconds), time(), stop(), len(), abs(), floor(), ceil(), round(), sqrt(), clamp(), min(), max(), int(), float(), str(), pi.\n' +
+    'Logic gates are normal GS expressions: AND (a and b), OR (a or b), NOT (not a), XOR (not (a == b)), NAND (not (a and b)), NOR (not (a or b)), XNOR (a == b).\n' +
+    'Sensors are the inputs: sensor_1.temperature, sensor_1.pressure, sensor_1.gas("Fuel"), sensor_1.moles("Fuel"), valve_1.is_open, gate_1.flow. Outputs: valve_1.open(), valve_1.close(), injector_1.rate = 40, injector_1.gas = "Oxidizer", igniter_1.on().\n' +
+    'Example XOR with a sensor and a valve:\n' +
+    'hot = sensor_1.temperature > 800\n' +
+    'open = valve_1.is_open\n' +
+    'if not (hot == open):\n' +
+    '    print("only one condition is true")\n' +
     'One pass of a while loop is one simulation tick. Use wait(seconds) to slow down.\n' +
     'There is no random() and no pow(). Do not invent functions or parts.\n' +
     'Only use these real parts and members:\n' + parts + '\n' +
@@ -2109,6 +2117,14 @@ function localAssistant(prompt) {
       return { text: t('ai.selectedBlock', sel.type) + '\n' + (sel.getTooltip ? sel.getTooltip() : ''), code: '' };
     }
     return { text: t('ai.selectBlock'), code: '' };
+  }
+  if (/puerta|l[oó]gica|logic|gate|xor|nand|nor|xnor/.test(q)) {
+    const hot = es ? 'caliente' : 'hot';
+    const open = es ? 'abierta' : 'open';
+    return {
+      text: note + t('ai.gateText'),
+      code: 'objetivo = 800\nwhile True:\n    ' + hot + ' = ' + sensor + '.temperature > objetivo\n    ' + open + ' = ' + valve + '.is_open\n    print("XOR", not (' + hot + ' == ' + open + '))\n    print("NAND", not (' + hot + ' and ' + open + '))\n    print("NOR", not (' + hot + ' or ' + open + '))\n    print("XNOR", ' + hot + ' == ' + open + ')\n    wait(0.5)\n'
+    };
   }
   if (/temperatura|temperature|sensor|calor|alarma|heat/.test(q)) {
     const target = es ? 'objetivo' : 'target';

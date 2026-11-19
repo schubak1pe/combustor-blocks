@@ -25,11 +25,17 @@ bloques (Blockly) → generador JS → código GS → GsCompiler.Compile
 El programa resultante es un script GS normal: aparece en el editor de código
 del juego, se guarda con el motor y viaja con los códigos de compartir.
 
-## Puertas lógicas (0.2.0)
+## Puertas lógicas (0.2.1)
 
 El botón **Puertas lógicas** de la barra inferior abre un panel con todas las
 puertas: **AND, OR, NOT, XOR, NAND, NOR y XNOR**. También están en la categoría
 **Puertas lógicas** de la paleta.
+
+La pestaña **IA** también las entiende: el botón rápido **Puertas lógicas**
+genera una plantilla GS con XOR, NAND, NOR y XNOR, y el asistente online recibe
+las equivalencias en su prompt. Las puertas no son botones: sus entradas son
+condiciones reales del motor, por ejemplo `sensor_1.temperature > 800`,
+`valve_1.is_open` o `gate_1.flow > 10`.
 
 Las entradas no son botones: son condiciones reales del motor, por ejemplo
 `sensor_1.temperature > 800`, `valve_1.is_open` o `gate_1.flow > 10`. Las
